@@ -7,7 +7,7 @@ class MForm : Form {
 
     public MForm() {
         Text = "Anchor";
-        Size = new Size(350, 350);
+        Size = new Size(325, 350);
 
         Button btn1 = new Button();
         btn1.Text = "Button1";
