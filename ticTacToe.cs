@@ -61,14 +61,19 @@ class Player {
     bool playersTurn;
     int playerNumber;
     string playerSymbol;
-	bool playerWins=false;
+    bool playerWins=false;
+	string name;
 
-	public bool GetWin(){
-		return playerWins;
-	}
+    public bool GetWin() {
+        return playerWins;
+    }
 
-	public void SetWin(bool flag){
-		playerWins=flag;
+    public void SetWin(bool flag) {
+        playerWins=flag;
+    }
+
+	public string GetName(){
+		return name;
 	}
 
     public int GetNumber() {
@@ -88,14 +93,17 @@ class Player {
         playersTurn=false;
         if(playerNumber==1) {
             playerSymbol="X";
+			name = "Player One (X)";
         }
         else if(playerNumber==2) {
             playerSymbol="O";
+			name = "Player Two (O)";
         }
     }
 
     public Player(bool turn) {
         playerNumber=1;
+		name = "Player One (X)";
         playersTurn=turn;
     }
 
@@ -104,21 +112,32 @@ class Player {
         playersTurn=turn;
         if(playerNumber==1) {
             playerSymbol="X";
+			name = "Player One (X)";
         }
         else if(playerNumber==2) {
             playerSymbol="O";
+			name = "Player Two (O)";
         }
     }
 }
 
 class MForm : Form {
+	Label label1;
     Control control = Control.GetInstance();
     bool gameOver = false;
     Button[,] grid = new Button[3,3];
 
     private void init() {
+        label1 = new Label();
+        label1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+        label1.UseMnemonic = true;
+        label1.Text = control.Current().GetName();
+        label1.Size = new Size (300, 30);
+		label1.TextAlign = ContentAlignment.MiddleCenter;
+        label1.Parent = this;
+
         Text = "Tic Tac Toe";
-        Size = new Size(325, 350);
+		this.AutoSize = true;
         String btn1String = "";
         String btn2String = "";
         String btn3String = "";
@@ -135,7 +154,7 @@ class MForm : Form {
         btn1.Text = btn1String;
         btn1.Font = new Font(btn1.Font.FontFamily, fontSize);
         btn1.Parent = this;
-        btn1.Location = new Point(0, 0);
+        btn1.Location = new Point(0, 50);
         btn1.Size = new Size(100, 100);
         btn1.Click += new EventHandler(this.selectTile);
         grid[0,0] = btn1;
@@ -144,7 +163,7 @@ class MForm : Form {
         btn2.Text = btn2String;
         btn2.Font = new Font(btn2.Font.FontFamily, fontSize);
         btn2.Parent = this;
-        btn2.Location = new Point(100, 0);
+        btn2.Location = new Point(100, 50);
         btn2.Size = new Size(100, 100);
         btn2.Click += new EventHandler(this.selectTile);
         grid[0,1] = btn2;
@@ -153,7 +172,7 @@ class MForm : Form {
         btn3.Text = btn3String;
         btn3.Font = new Font(btn3.Font.FontFamily, fontSize);
         btn3.Parent = this;
-        btn3.Location = new Point(200, 0);
+        btn3.Location = new Point(200, 50);
         btn3.Size = new Size(100, 100);
         btn3.Click += new EventHandler(this.selectTile);
         grid[0,2] = btn3;
@@ -162,7 +181,7 @@ class MForm : Form {
         btn4.Text = btn4String;
         btn4.Font = new Font(btn4.Font.FontFamily, fontSize);
         btn4.Parent = this;
-        btn4.Location = new Point(0, 100);
+        btn4.Location = new Point(0, 150);
         btn4.Size = new Size(100, 100);
         btn4.Click += new EventHandler(this.selectTile);
         grid[1,0] = btn4;
@@ -171,7 +190,7 @@ class MForm : Form {
         btn5.Text = btn5String;
         btn5.Font = new Font(btn5.Font.FontFamily, fontSize);
         btn5.Parent = this;
-        btn5.Location = new Point(100, 100);
+        btn5.Location = new Point(100, 150);
         btn5.Size = new Size(100, 100);
         btn5.Click += new EventHandler(this.selectTile);
         grid[1,1] = btn5;
@@ -180,7 +199,7 @@ class MForm : Form {
         btn6.Text = btn6String;
         btn6.Font = new Font(btn6.Font.FontFamily, fontSize);
         btn6.Parent = this;
-        btn6.Location = new Point(200, 100);
+        btn6.Location = new Point(200, 150);
         btn6.Size = new Size(100, 100);
         btn6.Click += new EventHandler(this.selectTile);
         grid[1,2] = btn6;
@@ -189,7 +208,7 @@ class MForm : Form {
         btn7.Text = btn7String;
         btn7.Font = new Font(btn7.Font.FontFamily, fontSize);
         btn7.Parent = this;
-        btn7.Location = new Point(0, 200);
+        btn7.Location = new Point(0, 250);
         btn7.Size = new Size(100, 100);
         btn7.Click += new EventHandler(this.selectTile);
         grid[2,0] = btn7;
@@ -198,7 +217,7 @@ class MForm : Form {
         btn8.Text = btn8String;
         btn8.Font = new Font(btn8.Font.FontFamily, fontSize);
         btn8.Parent = this;
-        btn8.Location = new Point(100, 200);
+        btn8.Location = new Point(100, 250);
         btn8.Size = new Size(100, 100);
         btn8.Click += new EventHandler(this.selectTile);
         grid[2,1] = btn8;
@@ -207,7 +226,7 @@ class MForm : Form {
         btn9.Text = btn9String;
         btn9.Font = new Font(btn9.Font.FontFamily, fontSize);
         btn9.Parent = this;
-        btn9.Location = new Point(200, 200);
+        btn9.Location = new Point(200, 250);
         btn9.Size = new Size(100, 100);
         btn9.Click += new EventHandler(this.selectTile);
         grid[2,2] = btn9;
@@ -226,8 +245,10 @@ class MForm : Form {
             clickedButton.Enabled = false;
             checkWin();
         }
-        if(!gameOver)
+        if(!gameOver){
             control.Next();
+			label1.Text = control.Current().GetName();
+		}
     }
 
     private void checkWin() {
@@ -240,85 +261,91 @@ class MForm : Form {
                 }
             }
         }
-        if(counter>=9){
-			gameOver = true;
-			GameOverDisplay();
-		}
-		control.Current().SetWin(false);
+        if(counter>=9) {
+            gameOver = true;
+            GameOverDisplay();
+        }
+        control.Current().SetWin(false);
 
-		//check rows for win
+        //check rows for win
         for(int i = 0; i < 3; ++i) {
-			counter = 1;
+            counter = 1;
             for(int j = 0; j < 2; ++j) {
                 if(grid[i,j].Text == grid[i,j+1].Text && grid[i,j].Text != "") {
-					++counter;
-				}
-			}
-			if(counter == 3) break;
-		}
-		if(counter == 3){
-			control.Current().SetWin(true);
-			gameOver = true;
-			GameOverDisplay();
-		}
+                    ++counter;
+                }
+            }
+            if(counter == 3) break;
+        }
+        if(counter == 3) {
+            control.Current().SetWin(true);
+            gameOver = true;
+            GameOverDisplay();
+        }
 
-		//check verticles for win
-		counter = 0;
-		if(grid[0,0].Text == grid[1,0].Text && grid[1,0].Text == grid[2,0].Text && grid[0,0].Text != "") {++counter;}
-		else if(grid[0,1].Text == grid[1,1].Text && grid[1,1].Text == grid[2,1].Text && grid[0,1].Text != "") {++counter;}
-		else if(grid[0,2].Text == grid[1,2].Text && grid[1,2].Text == grid[2,2].Text && grid[0,2].Text != "") {++counter;}
-		if(counter != 0){
-			control.Current().SetWin(true);
-			gameOver = true;
-			GameOverDisplay();
-		}
+        //check verticles for win
+        counter = 0;
+        if(grid[0,0].Text == grid[1,0].Text && grid[1,0].Text == grid[2,0].Text && grid[0,0].Text != "") {
+            ++counter;
+        }
+        else if(grid[0,1].Text == grid[1,1].Text && grid[1,1].Text == grid[2,1].Text && grid[0,1].Text != "") {
+            ++counter;
+        }
+        else if(grid[0,2].Text == grid[1,2].Text && grid[1,2].Text == grid[2,2].Text && grid[0,2].Text != "") {
+            ++counter;
+        }
+        if(counter != 0) {
+            control.Current().SetWin(true);
+            gameOver = true;
+            GameOverDisplay();
+        }
 
-		//check right diagonal \
-		counter = 0;
-		string match = "";
-		for(int i = 0; i < 3; ++i){
-			if(grid[i, i].Text != "" && i == 0){
-				match = grid[i, i].Text;
-				++counter;
-			}
-			else if(match == grid[i, i].Text && grid[i, i].Text != ""){
-				++counter;
-			}
-		}
-		if(counter == 3){
-			control.Current().SetWin(true);
-			gameOver = true;
-			GameOverDisplay();
-		}
+        //check right diagonal \
+        counter = 0;
+        string match = "";
+        for(int i = 0; i < 3; ++i) {
+            if(grid[i, i].Text != "" && i == 0) {
+                match = grid[i, i].Text;
+                ++counter;
+            }
+            else if(match == grid[i, i].Text && grid[i, i].Text != "") {
+                ++counter;
+            }
+        }
+        if(counter == 3) {
+            control.Current().SetWin(true);
+            gameOver = true;
+            GameOverDisplay();
+        }
 
-		//check left diagonal /
-		counter = 0;
-		match = "";
-		for(int i = 0; i < 3; ++i){
-			if(grid[i, 2-i].Text != "" && i == 0){
-				match = grid[i, 2-i].Text;
-				++counter;
-			}
-			else if(match == grid[i, 2-i].Text && grid[i, 2-i].Text != ""){
-				++counter;
-			}
-		}
-		if(counter == 3){
-			control.Current().SetWin(true);
-			gameOver = true;
-			GameOverDisplay();
-		}
-	}
+        //check left diagonal /
+        counter = 0;
+        match = "";
+        for(int i = 0; i < 3; ++i) {
+            if(grid[i, 2-i].Text != "" && i == 0) {
+                match = grid[i, 2-i].Text;
+                ++counter;
+            }
+            else if(match == grid[i, 2-i].Text && grid[i, 2-i].Text != "") {
+                ++counter;
+            }
+        }
+        if(counter == 3) {
+            control.Current().SetWin(true);
+            gameOver = true;
+            GameOverDisplay();
+        }
+    }
 
     public void GameOverDisplay() {
         //displays an Alert that notify's user of winner and game over
-		string message;
-		if(control.Current().GetWin()){
-			message = "Player " + control.Current().GetNumber() + " won!";
-		}
-		else{
-			message = "Game ends in a draw!";
-		}
+        string message;
+        if(control.Current().GetWin()) {
+            message = control.Current().GetName() + " won!";
+        }
+        else {
+            message = "Game ends in a draw!";
+        }
         string caption = "GAME OVER";
         MessageBoxButtons buttons = MessageBoxButtons.OK;
         DialogResult result;
@@ -329,7 +356,7 @@ class MForm : Form {
         if (result == System.Windows.Forms.DialogResult.OK)
         {
             // Closes the parent form.
-			//TODO: if time, we can make an option to reset the game, or close
+            //TODO: if time, we can make an option to reset the game, or close
             this.Close();
 
         }
