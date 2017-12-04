@@ -2,17 +2,18 @@ using System;
 
 namespace Palindrome{
 	class Program {
-		public bool isPalindrome(string word, int begin, int end)   {
+		static bool isPalindrome(string word, int begin, int end)   {
 			//base case, if this is reached then the rest of the letters match and the word IS a PALINDROME
 			if(begin >= end) {
                 return true; 
-            }
-			//continue to recurse if beginning and ending letters match
-			if(word[begin] == word[end]){
-            return isPalindrome(word, begin + 1, end - 1);
             }else {
-			return false;
-            }
+				//continue to recurse if beginning and ending letters match
+				if(word[begin] == word[end]){
+				return isPalindrome(word, begin + 1, end - 1);
+				}else {
+				return false;
+				}
+			}
 		}
 
 		static int Main(string[] args) {
